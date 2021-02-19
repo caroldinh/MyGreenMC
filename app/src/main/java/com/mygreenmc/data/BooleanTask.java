@@ -17,8 +17,18 @@ public class BooleanTask extends Task{
         }
     }
 
+    public boolean getInput(){ return input; }
+
+    public boolean getCheckVal(){ return checkVal; }
+
     public boolean verify(){
         return input == checkVal;
+    }
+
+    public String toString(){
+        String str = getName() + "&" + getDescription() + "&" + getPointVal() + "&" +
+                getStreak() + "&" + getCategory() + "&" + checkVal + "?" + input;
+        return str;
     }
 
 }

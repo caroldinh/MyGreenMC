@@ -20,21 +20,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_weight="30"
+            android:layout_marginHorizontal="20dp">
 
-            <CheckBox
-                android:id="@+id/checkBox"
+            <Switch
+                android:id="@+id/switch1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="25"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:buttonTint="@color/white"/>
+
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="75"
+                android:layout_weight="70"
                 android:orientation="vertical">
 
             <TextView

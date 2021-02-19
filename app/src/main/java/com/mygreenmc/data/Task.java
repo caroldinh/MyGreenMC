@@ -28,6 +28,8 @@ public abstract class Task {
         return this.category;
     }
 
+    public int getStreak(){ return this.streak; }
+
     public int getPointVal(){
         return this.pointVal;
     }
@@ -36,6 +38,8 @@ public abstract class Task {
         streak++;
     }
 
-    abstract boolean verify();
+    public abstract boolean verify();
+
+    public abstract String toString();
 
 }

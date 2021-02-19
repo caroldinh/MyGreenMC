@@ -20,14 +20,27 @@ public class IntTask extends Task{
         }
     }
 
+    public int getInput(){
+        return input;
+    }
+
+    public int getCheckVal(){ return checkVal; }
+    public String getComparison() { return comparison; }
+
     public boolean verify(){
-        if(comparison == "<=") {
+        if(comparison.equals("<=")) {
             return input <= checkVal;
-        } else if(comparison == ">="){
+        } else if(comparison.equals(">=")){
             return input >= checkVal;
         } else{
             return false;
         }
+    }
+
+    public String toString(){
+        String str = getName() + "&" + getDescription() + "&" + getPointVal() + "&" +
+                getStreak() + "&" + getCategory() + "&" + checkVal + "&" + comparison + "?" + input;
+        return str;
     }
 
 }

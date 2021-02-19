@@ -3,6 +3,7 @@ package com.mygreenmc;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView loginInstead;
         TextView registerInstead;
         String TAG = "Register Debugging Tag";
+        Context context;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,8 @@ public class LoginActivity extends AppCompatActivity {
             loginInstead = findViewById(R.id.logininstead);
             registerInstead = findViewById(R.id.registerInstead);
             verifyPassword = findViewById(R.id.verifyPassword);
+
+            context = this;
 
             // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
@@ -123,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "createUserWithEmail:success");
                                         final FirebaseUser user = mAuth.getCurrentUser();
-                                        User userLog = new User(user.getUid(), name);
+                                        User userLog = new User(user.getUid(), name, context);
                                         Log.d("UID: ", user.getUid());
                                         Log.d("NAME: ", name);
                                         //mDatabase.child("users").child("test").setValue("test");
@@ -178,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
 
         public void updateUI(FirebaseUser user){
 
+            User u = new User(user.getUid(), user.getDisplayName(), context);
             startActivity(new Intent(LoginActivity.this, SelectTasks.class));
             finish();
 

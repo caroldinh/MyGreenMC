@@ -6,10 +6,74 @@
     android:layout_height="match_parent"
     tools:context=".SelectTasks">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/SelectTasksRecycler"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="150dp"
-        tools:layout_editor_absoluteY="109dp" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Electricity"
+                android:textSize="24dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/electricity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Water"
+                android:textSize="24dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/water"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:textSize="24dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transportation"
+                android:textSize="24dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/transportation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:onClick="save"
+            android:backgroundTint="@color/colorPrimaryLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="30dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

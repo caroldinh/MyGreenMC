@@ -15,21 +15,9 @@
         android:layout_margin="20dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
+        android:focusableInTouchMode="true"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="25"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:buttonTint="@color/white"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,12 +40,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginBottom="20dp"
                 android:layout_marginTop="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginHorizontal="20dp">
+
+                    <EditText
+                        android:id="@+id/textInput"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:ems="10"
+                        android:inputType="number"
+                        />
+
+                    <TextView
+                        android:id="@+id/checkVal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:text="/20"
+                        android:textSize="20dp"/>
+                </LinearLayout>
+
 
             </LinearLayout>
 
-        </LinearLayout>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
 
     </androidx.cardview.widget.CardView>
 

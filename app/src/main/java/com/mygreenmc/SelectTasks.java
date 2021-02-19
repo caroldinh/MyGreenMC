@@ -4,13 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,14 +28,26 @@ import com.mygreenmc.data.IntTask;
 import com.mygreenmc.data.Task;
 import com.mygreenmc.data.User;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SelectTasks extends AppCompatActivity {
 
-    private RecyclerView recycler;
+    private RecyclerView electricity, water, transportation, home;
+    private Button next;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+
+    private User user;
+
+    private ArrayList<Task> allTasks;
+    private ArrayList<Task> electricityTasks = new ArrayList<>();
+    private ArrayList<Task> waterTasks = new ArrayList<>();
+    private ArrayList<Task> transportTasks = new ArrayList<>();
+    private ArrayList<Task> homeTasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +55,34 @@ public class SelectTasks extends AppCompatActivity {
         setContentView(R.layout.activity_select_tasks);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        recycler = findViewById(R.id.SelectTasksRecycler);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
-        ArrayList<Task> allTasks = getTasks();
+        electricity = findViewById(R.id.electricity);
+        water = findViewById(R.id.water);
+        transportation = findViewById(R.id.transportation);
+        home = findViewById(R.id.home);
 
-        //allTasks.setClickListener(this)
-        //Log.d("TASK NAME", allTasks.get(0).getName());
+        next = findViewById(R.id.next);
+
+        electricity.setLayoutManager(new LinearLayoutManager(this));
+        water.setLayoutManager(new LinearLayoutManager(this));
+        transportation.setLayoutManager(new LinearLayoutManager(this));
+        home.setLayoutManager(new LinearLayoutManager(this));
+
+        allTasks = getTasks();
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), this);
+        // updateUI(currentUser);
+
+        // If the user has already selected their tasks
+        if(user.getInProgress().size() != 0 || user.getComplete().size() != 0){
+            startActivity(new Intent(SelectTasks.this, MainActivity.class));
+            finish();
+        }
 
     }
 
-    protected ArrayList<Task> getTasks(){
+    protected ArrayList<Task> getTasks() {
         ArrayList<Task> taskList = new ArrayList<>();
 
         mDatabase.child("tasks").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -53,7 +90,7 @@ public class SelectTasks extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Task task = null;
-                    if(snapshot.child("data").getValue().toString().equals("int")){
+                    if (snapshot.child("data").getValue().toString().equals("int")) {
                         String name = snapshot.child("name").getValue().toString();
                         String desc = snapshot.child("description").getValue().toString();
                         int pointVal = Integer.parseInt(snapshot.child("pointVal").getValue().toString());
@@ -61,7 +98,7 @@ public class SelectTasks extends AppCompatActivity {
                         int check = Integer.parseInt(snapshot.child("checkVal").getValue().toString());
                         String compare = snapshot.child("comparison").getValue().toString();
                         task = new IntTask(name, desc, pointVal, 0, category, check, compare);
-                    } else{
+                    } else {
                         String name = snapshot.child("name").getValue().toString();
                         String desc = snapshot.child("description").getValue().toString();
                         int pointVal = Integer.parseInt(snapshot.child("pointVal").getValue().toString());
@@ -69,15 +106,15 @@ public class SelectTasks extends AppCompatActivity {
                         boolean check = Boolean.parseBoolean(snapshot.child("checkVal").getValue().toString());
                         task = new BooleanTask(name, desc, pointVal, 0, category, check);
                     }
-                    taskList.add(task);
+
                     Log.d("TEST", task.getName());
+                    taskList.add(task);
                 }
                 Log.d("TASK_LENGTH", Integer.toString(taskList.size()));
-                SelectTaskAdapter adapter = new SelectTaskAdapter(taskList);
-                recycler.setAdapter(adapter);
+                sortTasks(taskList);
             }
 
-            public void onCancelled(DatabaseError databaseError){
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -86,6 +123,84 @@ public class SelectTasks extends AppCompatActivity {
         return taskList;
     }
 
+    private void sortTasks(ArrayList<Task> allTasks) {
+
+        for (Task task : allTasks) {
+            Log.d("CATEGORY", task.getCategory());
+            if (task.getCategory().equals("Water")) {
+                waterTasks.add(task);
+            } else if (task.getCategory().equals("Electricity")) {
+                electricityTasks.add(task);
+            } else if (task.getCategory().equals("Home")) {
+                homeTasks.add(task);
+            } else if (task.getCategory().equals("Transportation")) {
+                transportTasks.add(task);
+            }
+        }
+
+        SelectTaskAdapter waterAdapter = new SelectTaskAdapter(waterTasks, this.getApplicationContext());
+        water.setAdapter(waterAdapter);
+
+        SelectTaskAdapter electricityAdapter = new SelectTaskAdapter(electricityTasks, this.getApplicationContext());
+        electricity.setAdapter(electricityAdapter);
+
+        SelectTaskAdapter transportAdapter = new SelectTaskAdapter(transportTasks, this.getApplicationContext());
+        transportation.setAdapter(transportAdapter);
+
+        SelectTaskAdapter homeAdapter = new SelectTaskAdapter(homeTasks, this.getApplicationContext());
+        home.setAdapter(homeAdapter);
+
+    }
+
+    public void save(View v) {
+
+        ArrayList<Task> selected = new ArrayList<>();
+
+        int waterCount = 0;
+        for (int i = 0; i < waterTasks.size(); i++) {
+            CheckBox c = water.getChildAt(i).findViewById(R.id.checkBox);
+            if (c.isChecked()) {
+                waterCount++;
+                selected.add(waterTasks.get(i));
+            }
+        }
+        int elecCount = 0;
+        for (int i = 0; i < electricityTasks.size(); i++) {
+            CheckBox c = electricity.getChildAt(i).findViewById(R.id.checkBox);
+            if (c.isChecked()) {
+                elecCount++;
+                selected.add(electricityTasks.get(i));
+            }
+        }
+        int transCount = 0;
+        for (int i = 0; i < transportTasks.size(); i++) {
+            CheckBox c = transportation.getChildAt(i).findViewById(R.id.checkBox);
+            if (c.isChecked()) {
+                transCount++;
+                selected.add(transportTasks.get(i));
+            }
+        }
+        int homeCount = 0;
+        for (int i = 0; i < homeTasks.size(); i++) {
+            CheckBox c = home.getChildAt(i).findViewById(R.id.checkBox);
+            if (c.isChecked()) {
+                homeCount++;
+                selected.add(homeTasks.get(i));
+            }
+        }
+
+        if (waterCount > 0 && elecCount > 0 && transCount > 0 && homeCount > 0) {
+            user.clearTasks();
+            for(Task task : selected){
+                user.addTask(task);
+            }
+            user.saveTasks();
+            startActivity(new Intent(SelectTasks.this, MainActivity.class));
+        } else {
+            Toast.makeText(this, "Please select at least one task from each category", Toast.LENGTH_LONG).show();
+        }
+
+    }
 }
 
 

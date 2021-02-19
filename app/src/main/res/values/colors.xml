@@ -6,6 +6,7 @@
     <color name="colorSecondary">#FFD23F</color>
     <color name="colorAccent">#EE4266</color>
     <color name="colorAccentDark">#540D6E</color>
+    <color name="blue">#44BBFF</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 </resources>
