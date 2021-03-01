@@ -1,12 +1,14 @@
 package com.montgomeryenergyconnection;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import com.montgomeryenergyconnection.data.Task;
+import com.montgomeryenergyconnection.data.User;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -18,6 +20,7 @@ public class SelectTaskAdapter extends RecyclerView.Adapter<SelectTaskAdapter.Vi
 
     private ArrayList<Task> tasks;
     private Context context;
+    private User user;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -55,9 +58,10 @@ public class SelectTaskAdapter extends RecyclerView.Adapter<SelectTaskAdapter.Vi
      * @param dataSet String[] containing the data to populate views to be used
      * by RecyclerView.
      */
-    public SelectTaskAdapter(ArrayList<Task> dataSet, Context context) {
+    public SelectTaskAdapter(ArrayList<Task> dataSet, Context context, User user) {
         this.tasks = dataSet;
         this.context = context;
+        this.user = user;
     }
 
     // Create new views (invoked by the layout manager)
@@ -78,6 +82,16 @@ public class SelectTaskAdapter extends RecyclerView.Adapter<SelectTaskAdapter.Vi
         // contents of the view with that element
         viewHolder.getName().setText(tasks.get(position).getName());
         viewHolder.getDescription().setText(tasks.get(position).getDescription());
+
+        ArrayList<String> myTasks = new ArrayList<String>();
+        for(Task task : user.getInProgress()){
+            myTasks.add(task.getName());
+        }
+        for(Task task : user.getComplete()){
+            myTasks.add(task.getName());
+        }
+        viewHolder.getCheck().setChecked(myTasks.indexOf(tasks.get(position).getName()) != -1 || myTasks.indexOf(tasks.get(position).getName()) != -1);
+        //user.getComplete().indexOf(tasks.get(position)) != -1 || user.getInProgress().indexOf(tasks.get(position)) != -1
 
         if(tasks.get(position).getCategory().equals("Water")){
             viewHolder.getCard().setCardBackgroundColor(ContextCompat.getColor(context, R.color.blue));

@@ -66,11 +66,13 @@ public class SelectTasks extends AppCompatActivity {
         user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), this);
         // updateUI(currentUser);
 
+        /***
         // If the user has already selected their tasks
         if(user.getInProgress().size() != 0 || user.getComplete().size() != 0){
             startActivity(new Intent(SelectTasks.this, MainActivity.class));
             finish();
         }
+         ***/
 
     }
 
@@ -130,16 +132,16 @@ public class SelectTasks extends AppCompatActivity {
             }
         }
 
-        SelectTaskAdapter waterAdapter = new SelectTaskAdapter(waterTasks, this.getApplicationContext());
+        SelectTaskAdapter waterAdapter = new SelectTaskAdapter(waterTasks, this.getApplicationContext(), user);
         water.setAdapter(waterAdapter);
 
-        SelectTaskAdapter electricityAdapter = new SelectTaskAdapter(electricityTasks, this.getApplicationContext());
+        SelectTaskAdapter electricityAdapter = new SelectTaskAdapter(electricityTasks, this.getApplicationContext(), user);
         electricity.setAdapter(electricityAdapter);
 
-        SelectTaskAdapter transportAdapter = new SelectTaskAdapter(transportTasks, this.getApplicationContext());
+        SelectTaskAdapter transportAdapter = new SelectTaskAdapter(transportTasks, this.getApplicationContext(), user);
         transportation.setAdapter(transportAdapter);
 
-        SelectTaskAdapter homeAdapter = new SelectTaskAdapter(homeTasks, this.getApplicationContext());
+        SelectTaskAdapter homeAdapter = new SelectTaskAdapter(homeTasks, this.getApplicationContext(), user);
         home.setAdapter(homeAdapter);
 
     }
@@ -182,11 +184,44 @@ public class SelectTasks extends AppCompatActivity {
         }
 
         if (waterCount > 0 && elecCount > 0 && transCount > 0 && homeCount > 0) {
-            user.clearTasks();
-            for(Task task : selected){
-                user.addTask(task);
+
+            ArrayList<String> myTasks = new ArrayList<String>();
+            for(Task task : user.getInProgress()){
+                myTasks.add(task.getName());
             }
+            for(Task task : user.getComplete()){
+                myTasks.add(task.getName());
+            }
+
+            for(Task task : selected){
+                if(myTasks.indexOf(task.getName()) == -1 && myTasks.indexOf(task.getName()) == -1){
+                    user.addTask(task);
+                }
+            }
+
+            myTasks.clear();
+            for(Task task : selected){
+                myTasks.add(task.getName());
+            }
+
+            ArrayList<Task> tempInProgress = new ArrayList<>();
+            tempInProgress.addAll(user.getInProgress());
+            ArrayList<Task> tempComplete = new ArrayList<>();
+            tempComplete.addAll(user.getComplete());
+            for(Task task : tempInProgress){
+                if(myTasks.indexOf(task.getName()) == -1){
+                    user.getInProgress().remove(task);
+                }
+            }
+            for(Task task : tempComplete){
+                if(myTasks.indexOf(task.getName()) == -1){
+                    user.getComplete().remove(task);
+                }
+            }
+
             user.saveTasks();
+
+
             startActivity(new Intent(SelectTasks.this, MainActivity.class));
         } else {
             Toast.makeText(this, "Please select at least one task from each category", Toast.LENGTH_LONG).show();

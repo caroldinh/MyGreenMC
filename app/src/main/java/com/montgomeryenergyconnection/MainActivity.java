@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private User user;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
-    NavigationView navigationView;
     ActionBarDrawerToggle toggle;
     ListView drawerList;
     TextView none, done;
@@ -56,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser == null){
+            Intent i = new Intent(MainActivity.this,LoginActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+            finish();
+        }
         user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), this);
 
 
@@ -111,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO: do your stuff
 
                 switch(position)
                 {
@@ -121,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                         break;
                     case 1:
-                        Toast.makeText(MainActivity.this, "Stats",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this, StatsActivity.class));
+                        finish();
                         break;
                     case 2:
                         Toast.makeText(MainActivity.this, "My Account",Toast.LENGTH_SHORT).show();
