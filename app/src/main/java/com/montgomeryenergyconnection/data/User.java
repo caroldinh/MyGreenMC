@@ -1,8 +1,14 @@
-package com.mygreenmc.data;
+package com.montgomeryenergyconnection.data;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,6 +32,10 @@ public class User {
         saveUserFile();
 
         readTasks();
+
+    }
+
+    public void saveToCloud(DatabaseReference mDatabase, FirebaseAuth mAuth){
 
     }
 
@@ -116,6 +126,24 @@ public class User {
         }
 
         inProgress.add(task);
+
+    }
+
+    public void resetTasks(){
+
+        ArrayList<Task> allTasks = new ArrayList<>();
+        allTasks.addAll(complete);
+        allTasks.addAll(inProgress);
+        clearTasks();
+        for(Task task : allTasks){
+            addTask(task);
+        }
+        saveTasks();
+
+        Log.d("RESET", inProgress.toString());
+        Log.d("RESET", complete.toString());
+        Log.d("RESET", inProgress.size() + "");
+        Log.d("RESET", complete.size()+"");
 
     }
 

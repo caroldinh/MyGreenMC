@@ -1,32 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    tools:openDrawer="end"
+    android:id="@+id/drawer"
     android:layout_height="match_parent"
-    tools:context=".SelectTasks"
-    android:clickable="true"
-    android:focusableInTouchMode="true">
+    tools:context=".MainActivity">
 
-    <ScrollView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" />
+
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:layout_marginTop="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical"
             android:clickable="true"
             android:focusableInTouchMode="true">
 
             <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"
+                android:layout_gravity="center_horizontal"
+                android:text="Welcome!" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="In Progress"
+                android:layout_marginVertical="20dp"
                 android:textSize="24dp" />
+
+            <TextView
+                android:id="@+id/done"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="None - congratulations! You're done for the day!"
+                android:visibility="gone"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/in_prog"
@@ -39,15 +70,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Completed Tasks"
-                android:textSize="24dp" />
+                android:textSize="24dp"
+                android:layout_marginVertical="30dp"/>
+
+            <TextView
+                android:id="@+id/none"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="None yet!"
+                android:layout_marginVertical="20dp"
+                android:visibility="gone"/>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/complete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:clickable="true"
+                android:focusableInTouchMode="true"/>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ListView android:id="@+id/leftDrawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:choiceMode="singleChoice"
+        android:divider="@color/colorAccent"
+        android:dividerHeight="0dp"
+        android:background="@color/colorPrimaryDark"
+        android:drawSelectorOnTop="true"
+        >
+
+    </ListView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

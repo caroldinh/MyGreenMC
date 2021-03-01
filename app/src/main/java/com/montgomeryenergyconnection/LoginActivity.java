@@ -1,4 +1,4 @@
-package com.mygreenmc;
+package com.montgomeryenergyconnection;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mygreenmc.data.User;
+import com.montgomeryenergyconnection.data.User;
 
 public class LoginActivity extends AppCompatActivity {
 

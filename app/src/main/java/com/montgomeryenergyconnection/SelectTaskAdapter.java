@@ -1,13 +1,12 @@
-package com.mygreenmc;
+package com.montgomeryenergyconnection;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import com.mygreenmc.data.Task;
+import com.montgomeryenergyconnection.data.Task;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;

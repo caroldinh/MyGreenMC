@@ -1,17 +1,13 @@
-package com.mygreenmc;
+package com.montgomeryenergyconnection;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
@@ -23,16 +19,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mygreenmc.data.BooleanTask;
-import com.mygreenmc.data.IntTask;
-import com.mygreenmc.data.Task;
-import com.mygreenmc.data.User;
+import com.montgomeryenergyconnection.data.BooleanTask;
+import com.montgomeryenergyconnection.data.IntTask;
+import com.montgomeryenergyconnection.data.Task;
+import com.montgomeryenergyconnection.data.User;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class SelectTasks extends AppCompatActivity {
 

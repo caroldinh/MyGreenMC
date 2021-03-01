@@ -8,7 +8,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "com.mygreenmc"
+        applicationId "com.montgomeryenergyconnection"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -42,5 +42,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation "androidx.cardview:cardview:1.0.0"
+    implementation 'com.google.firebase:firebase-messaging'
 
 }

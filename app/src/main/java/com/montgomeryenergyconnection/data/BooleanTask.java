@@ -1,4 +1,4 @@
-package com.mygreenmc.data;
+package com.montgomeryenergyconnection.data;
 
 public class BooleanTask extends Task{
 

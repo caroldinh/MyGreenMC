@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:871448332420:android:d7c7dcae3d044069531ad1",
+        "mobilesdk_app_id": "1:871448332420:android:2080d6f1cf313033531ad1",
         "android_client_info": {
-          "package_name": "com.mygreenmc"
+          "package_name": "com.montgomeryenergyconnection"
         }
       },
       "oauth_client": [
