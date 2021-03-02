@@ -31,6 +31,8 @@ public class StatsActivity extends AppCompatActivity {
     ListView drawerList;
     Button select;
 
+    TextView numTasks, numPoints;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +40,7 @@ public class StatsActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Dashboard");
+        getSupportActionBar().setTitle("My Stats");
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -79,6 +81,7 @@ public class StatsActivity extends AppCompatActivity {
                         break;
                     case 3:
                         //Toast.makeText(MainActivity.this, "Logout",Toast.LENGTH_SHORT).show();
+                        user.saveToCloud(mDatabase);
                         mAuth.signOut();
                         user.clearFile();
                         Intent i = new Intent(StatsActivity.this,LoginActivity.class);
@@ -94,6 +97,12 @@ public class StatsActivity extends AppCompatActivity {
 
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        numTasks = findViewById(R.id.numTasks);
+        numPoints = findViewById(R.id.numPoints);
+
+        numTasks.setText(Integer.toString(user.getInProgress().size() + user.getComplete().size()));
+        numPoints.setText(Integer.toString(user.getPoints()));
 
 
     }

@@ -15,9 +15,6 @@ public class IntTask extends Task{
 
     public void setInput(int val){
         this.input = val;
-        if (verify()){
-            super.addStreak();
-        }
     }
 
     public int getInput(){

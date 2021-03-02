@@ -133,7 +133,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 android:text="Already have an account? Log in"
-                android:textColor="@color/colorPrimaryLight"
+                android:textColor="@color/colorSecondary"
                 android:onClick="showLogin"/>
 
             <TextView
@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:text="Don't have an account? Register"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/colorPrimaryLight"
+                android:textColor="@color/colorSecondary"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_gravity="center"
                 android:onClick="showRegister"

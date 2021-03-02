@@ -220,6 +220,7 @@ public class SelectTasks extends AppCompatActivity {
             }
 
             user.saveTasks();
+            user.saveToCloud(mDatabase);
 
 
             startActivity(new Intent(SelectTasks.this, MainActivity.class));

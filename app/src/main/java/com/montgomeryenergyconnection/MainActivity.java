@@ -26,6 +26,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.montgomeryenergyconnection.data.Task;
 import com.montgomeryenergyconnection.data.User;
 
 import java.util.Calendar;
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Dashboard");
@@ -61,8 +65,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         }
-        user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), this);
 
+        try{
+            user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), this);
+        } catch (Exception e){
+            Intent i = new Intent(MainActivity.this,LoginActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+            finish();
+        }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         int lastTimeStarted = settings.getInt("last_time_started", -1);
@@ -70,7 +81,13 @@ public class MainActivity extends AppCompatActivity {
         int today = calendar.get(Calendar.DAY_OF_YEAR);
 
         if(today != lastTimeStarted) {
+
+            for(Task task : user.getComplete()){
+                task.addStreak();
+            }
+            user.saveTasks();
             user.resetTasks();
+            user.saveToCloud(mDatabase);
 
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt("last_time_started", today);
@@ -133,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 3:
                         //Toast.makeText(MainActivity.this, "Logout",Toast.LENGTH_SHORT).show();
+                        user.saveToCloud(mDatabase);
                         mAuth.signOut();
                         user.clearFile();
                         Intent i = new Intent(MainActivity.this,LoginActivity.class);
@@ -221,12 +239,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        finish();
     }
 
 }

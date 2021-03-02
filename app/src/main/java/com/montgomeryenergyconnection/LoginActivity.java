@@ -2,9 +2,12 @@ package com.montgomeryenergyconnection;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +60,9 @@ public class LoginActivity extends AppCompatActivity {
 
             context = this;
 
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                    new IntentFilter("custom-message"));
+
             // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
 
@@ -72,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
             // updateUI(currentUser);
 
             if (user != null) {
-                updateUI(user);
+                //updateUI(user);
             }
         }
 
@@ -90,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    updateUI(user);
+                                    User u = new User(user.getUid(), user.getDisplayName(), context, mDatabase);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -182,7 +188,6 @@ public class LoginActivity extends AppCompatActivity {
 
         public void updateUI(FirebaseUser user){
 
-            User u = new User(user.getUid(), user.getDisplayName(), context);
             startActivity(new Intent(LoginActivity.this, SelectTasks.class));
             finish();
 
@@ -221,6 +226,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
         }
+
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+
+        }
+    };
 
 
 

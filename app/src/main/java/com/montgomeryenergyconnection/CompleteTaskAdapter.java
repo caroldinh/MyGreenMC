@@ -139,7 +139,7 @@ public class CompleteTaskAdapter extends RecyclerView.Adapter<CompleteTaskAdapte
         if(tasks.get(position).getCategory().equals("Water")){
             viewHolder.getCard().setCardBackgroundColor(ContextCompat.getColor(context, R.color.blue));
         } else if(tasks.get(position).getCategory().equals("Electricity")){
-            viewHolder.getCard().setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorSecondary));
+            viewHolder.getCard().setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
         }else if(tasks.get(position).getCategory().equals("Transportation")){
             viewHolder.getCard().setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
         } else if(tasks.get(position).getCategory().equals("Home")){

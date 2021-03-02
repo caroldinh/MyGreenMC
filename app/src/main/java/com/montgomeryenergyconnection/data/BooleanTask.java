@@ -12,9 +12,6 @@ public class BooleanTask extends Task{
 
     public void setInput(boolean val){
         this.input = val;
-        if (verify()){
-            super.addStreak();
-        }
     }
 
     public boolean getInput(){ return input; }
