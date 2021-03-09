@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView registerInstead;
         String TAG = "Register Debugging Tag";
         Context context;
+        FirebaseUser user;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -63,10 +65,18 @@ public class LoginActivity extends AppCompatActivity {
             LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                     new IntentFilter("custom-message"));
 
+            FirebaseApp.initializeApp(this);
             // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
-
             mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            FirebaseUser user = mAuth.getCurrentUser();
+
+            if (user != null) {
+                User myUser = new User(user.getUid(), user.getDisplayName(), this, mDatabase);
+                Log.d("USERTEST_LOGIN", myUser.getComplete().size() + "");
+                Log.d("USERTEST_LOGIN", myUser.getInProgress().size() + "");
+            }
 
         }
 
@@ -74,12 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         public void onStart() {
             super.onStart();
             // Check if user is signed in (non-null) and update UI accordingly.
-            FirebaseUser user = mAuth.getCurrentUser();
-            // updateUI(currentUser);
 
-            if (user != null) {
-                //updateUI(user);
-            }
         }
 
         public void login(View v){
@@ -97,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     User u = new User(user.getUid(), user.getDisplayName(), context, mDatabase);
+
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -188,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
 
         public void updateUI(FirebaseUser user){
 
-            startActivity(new Intent(LoginActivity.this, SelectTasks.class));
+            startActivity(new Intent(LoginActivity.this, Instructions.class));
             finish();
 
         }
@@ -227,6 +233,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+        // Broadcast sent from User.java after data from Firebase has been received
     public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

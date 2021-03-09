@@ -12,4 +12,13 @@
     <string name="prompt_displayname">Display Name</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="instructions">
+        Welcome to Montgomery Energy Connection, an app to help you track your energy-saving habits! On the next page, you will
+        be able to select tasks to concentrate on, such as reducing your shower time. You may edit this list of tasks at any time.\n\n
+
+        Every day, we challenge you to complete as many of your selected tasks as possible in order to gain points. You can redeem
+        these points to earn prizes.\n\n
+
+        Hit "NEXT" to continue to select your tasks.
+    </string>
 </resources>

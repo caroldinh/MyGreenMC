@@ -7,8 +7,6 @@
     tools:openDrawer="end"
     android:id="@+id/drawer"
     android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -45,55 +43,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="40dp"
                 android:layout_gravity="center_horizontal"
-                android:text="Welcome!" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="In Progress"
-                android:layout_marginVertical="20dp"
-                android:textSize="24dp" />
-
-            <TextView
-                android:id="@+id/done"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:text="None! You're done for the day."
-                android:visibility="gone"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/in_prog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Completed Tasks"
-                android:textSize="24dp"
-                android:layout_marginVertical="30dp"/>
-
-            <TextView
-                android:id="@+id/none"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:text="None yet!"
-                android:layout_marginVertical="20dp"
-                android:visibility="gone"/>
+                android:text="Prizes"
+                android:layout_marginBottom="25dp"/>
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/complete"
+                android:id="@+id/recycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"/>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

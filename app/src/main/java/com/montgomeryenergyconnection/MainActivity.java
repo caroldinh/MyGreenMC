@@ -17,16 +17,19 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
-import com.google.android.material.navigation.NavigationView;
+
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.montgomeryenergyconnection.adapters.CompleteTaskAdapter;
+import com.montgomeryenergyconnection.adapters.NavClickListener;
+import com.montgomeryenergyconnection.adapters.NavDrawerAdapter;
 import com.montgomeryenergyconnection.data.Task;
 import com.montgomeryenergyconnection.data.User;
 
@@ -57,23 +60,39 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Dashboard");
 
+        FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if(firebaseUser == null){
-            Intent i = new Intent(MainActivity.this,LoginActivity.class);
+
+        if(firebaseUser == null) {
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(i);
-            finish();
+            killActivity();
+            Log.d("KILLACTIVITY", "killed");
+        } else{
+            user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), this);
+            if(user == null){
+                Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);
+                killActivity();
+            }
+        }
+            /***
+        } else{
+            Log.d("LOGIN", "false");
+            try{
+
+            } catch (Exception e){
+                Intent i = new Intent(MainActivity.this,LoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);
+                killActivity();
+            }
         }
 
-        try{
-            user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), this);
-        } catch (Exception e){
-            Intent i = new Intent(MainActivity.this,LoginActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(i);
-            finish();
-        }
+        ***/
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         int lastTimeStarted = settings.getInt("last_time_started", -1);
@@ -93,6 +112,13 @@ public class MainActivity extends AppCompatActivity {
             editor.putInt("last_time_started", today);
             editor.commit();
         }
+
+
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
 
         inProg = findViewById(R.id.in_prog);
         complete = findViewById(R.id.complete);
@@ -123,46 +149,9 @@ public class MainActivity extends AppCompatActivity {
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String[] navRows = new String[4];
-        navRows[0] = "Dashboard";
-        navRows[1] = "Stats";
-        navRows[2] = "My Account";
-        navRows[3] = "Logout";
-        drawerList.setAdapter(new NavDrawerAdapter(this, R.layout.nav_item, navRows));
-        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                switch(position)
-                {
-                    case 0:
-                        //Toast.makeText(MainActivity.this, "My Picnics",Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(MainActivity.this, MainActivity.class));
-                        finish();
-                        break;
-                    case 1:
-                        startActivity(new Intent(MainActivity.this, StatsActivity.class));
-                        finish();
-                        break;
-                    case 2:
-                        Toast.makeText(MainActivity.this, "My Account",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 3:
-                        //Toast.makeText(MainActivity.this, "Logout",Toast.LENGTH_SHORT).show();
-                        user.saveToCloud(mDatabase);
-                        mAuth.signOut();
-                        user.clearFile();
-                        Intent i = new Intent(MainActivity.this,LoginActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(i);
-                        finish();
-                        break;
-                    default:
-                }
-
-            }
-        });
+        NavClickListener listener = new NavClickListener(this, user);
+        drawerList.setAdapter(new NavDrawerAdapter(this, R.layout.nav_item, listener.getNavRows()));
+        drawerList.setOnItemClickListener(listener);
 
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -186,6 +175,8 @@ public class MainActivity extends AppCompatActivity {
     public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+
             // Get extra data included in the Intent
             String recycler = intent.getStringExtra("RECYCLER");
             int position = intent.getIntExtra("POSITION", 0);
@@ -239,6 +230,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void killActivity(){
+        finish();
     }
 
 }

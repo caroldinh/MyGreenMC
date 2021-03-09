@@ -7,13 +7,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,13 +18,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.montgomeryenergyconnection.adapters.NavClickListener;
 import com.montgomeryenergyconnection.adapters.NavDrawerAdapter;
-import com.montgomeryenergyconnection.adapters.TaskStatAdapter;
-import com.montgomeryenergyconnection.data.Task;
+import com.montgomeryenergyconnection.adapters.PrizeAdapter;
 import com.montgomeryenergyconnection.data.User;
 
-import java.util.ArrayList;
-
-public class StatsActivity extends AppCompatActivity {
+public class PrizesActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -38,20 +32,15 @@ public class StatsActivity extends AppCompatActivity {
     ListView drawerList;
     Button select;
     RecyclerView recycler;
-    TaskStatAdapter adapter;
-
-    TextView numTasks, numPoints;
-
-    ArrayList<Task> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stats);
+        setContentView(R.layout.activity_prizes);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Stats");
+        getSupportActionBar().setTitle("Prizes");
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -72,11 +61,12 @@ public class StatsActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        numTasks = findViewById(R.id.numTasks);
-        numPoints = findViewById(R.id.numPoints);
-
-        numTasks.setText(Integer.toString(user.getInProgress().size() + user.getComplete().size()));
-        numPoints.setText(Integer.toString(user.getPoints()));
+        String[][] prizes = {
+                {"Shower Timer", "200"},
+                {"Solar Charger", "300"},
+                {"Power Outlet Switch", "400"},
+                {"Flashlight", "500"}
+        };
 
         recycler = findViewById(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(this){
@@ -85,17 +75,9 @@ public class StatsActivity extends AppCompatActivity {
                 return false;
             }
         });
-        tasks.addAll(user.getInProgress());
-        tasks.addAll(user.getComplete());
-        adapter = new TaskStatAdapter(tasks, this.getApplicationContext());
+
+        PrizeAdapter adapter = new PrizeAdapter(prizes, this.getApplicationContext());
         recycler.setAdapter(adapter);
-
-    }
-
-    public void select(View v){
-
-        startActivity(new Intent(StatsActivity.this, SelectTasks.class));
-        finish();
 
     }
 

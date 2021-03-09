@@ -22,15 +22,15 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
-                android:textSize="25dp"
-                android:text="Streak:" />
+                android:text="Streak:"
+                android:textSize="25dp" />
 
             <TextView
                 android:id="@+id/streak"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:layout_gravity="right"
@@ -45,7 +45,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.9"
             android:textSize="25dp"
@@ -53,12 +53,13 @@
 
         <TextView
             android:id="@+id/pointVal"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
             android:layout_gravity="right"
+            android:textAlignment="gravity"
             android:textSize="25dp"
-            android:text="5" />
+            android:text="15" />
     </LinearLayout>
 
 </LinearLayout>

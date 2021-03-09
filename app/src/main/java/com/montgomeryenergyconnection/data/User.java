@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,54 +51,49 @@ public class User {
                         //Get map of users in datasnapshot
 
                         points = Integer.parseInt(dataSnapshot.child("points").getValue().toString());
+                        ArrayList<DataSnapshot> allTasks = new ArrayList<>();
 
-                        for(DataSnapshot child :  dataSnapshot.child("inProgress").getChildren()){
-                            String name = child.child("name").getValue().toString();
-                            String description = child.child("description").getValue().toString();
-                            String category = child.child("category").getValue().toString();
-                            int pointVal = Integer.parseInt(child.child("pointVal").getValue().toString());
-                            int streak = Integer.parseInt(child.child("streak").getValue().toString());
-                            if(child.child("checkVal").getValue().toString().equals("true") || child.child("checkVal").getValue().toString().equals("false")){
-                                boolean checkVal = Boolean.parseBoolean(child.child("checkVal").getValue().toString());
-                                boolean input = Boolean.parseBoolean(child.child("input").getValue().toString());
-                                BooleanTask task = new BooleanTask(name, description, pointVal, streak, category, checkVal);
-                                task.setInput(input);
-                                inProgress.add(task);
-                            } else{
-                                int checkVal = Integer.parseInt(child.child("checkVal").getValue().toString());
-                                int input = Integer.parseInt(child.child("input").getValue().toString());
-                                String comparison = child.child("comparison").getValue().toString();
-                                IntTask task = new IntTask(name, description, pointVal, streak, category, checkVal, comparison);
-                                task.setInput(input);
-                                inProgress.add(task);
-                            }
+                        for(DataSnapshot child : dataSnapshot.child("inProgress").getChildren()){
+                            allTasks.add(child);
                         }
-                        for(DataSnapshot child :  dataSnapshot.child("complete").getChildren()){
+                        for(DataSnapshot child : dataSnapshot.child("complete").getChildren()){
+                            allTasks.add(child);
+                        }
+                        for(DataSnapshot child : allTasks) {
                             String name = child.child("name").getValue().toString();
                             String description = child.child("description").getValue().toString();
                             String category = child.child("category").getValue().toString();
                             int pointVal = Integer.parseInt(child.child("pointVal").getValue().toString());
                             int streak = Integer.parseInt(child.child("streak").getValue().toString());
-                            if(child.child("checkVal").getValue().toString().equals("true") || child.child("checkVal").getValue().toString().equals("false")){
+                            if (child.child("checkVal").getValue().toString().equals("true") || child.child("checkVal").getValue().toString().equals("false")) {
                                 boolean checkVal = Boolean.parseBoolean(child.child("checkVal").getValue().toString());
                                 boolean input = Boolean.parseBoolean(child.child("input").getValue().toString());
                                 BooleanTask task = new BooleanTask(name, description, pointVal, streak, category, checkVal);
                                 task.setInput(input);
-                                complete.add(task);
-                            } else{
+                                if(task.verify()){
+                                    complete.add(task);
+                                } else{
+                                    inProgress.add(task);
+                                }
+
+                            } else {
                                 int checkVal = Integer.parseInt(child.child("checkVal").getValue().toString());
                                 int input = Integer.parseInt(child.child("input").getValue().toString());
                                 String comparison = child.child("comparison").getValue().toString();
                                 IntTask task = new IntTask(name, description, pointVal, streak, category, checkVal, comparison);
                                 task.setInput(input);
-                                complete.add(task);
+                                if(task.verify()){
+                                    complete.add(task);
+                                } else{
+                                    inProgress.add(task);
+                                }
                             }
                         }
 
                         saveUserFile();
+                        saveTasks();
                         Intent intent = new Intent("custom-message");
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
 
                     }
 
@@ -348,6 +342,7 @@ public class User {
     public ArrayList<Task> getInProgress(){ return inProgress; }
     public ArrayList<Task> getComplete() { return complete; }
     public int getPoints(){ return points; }
+    public String getName(){ return name; }
 
 
 }

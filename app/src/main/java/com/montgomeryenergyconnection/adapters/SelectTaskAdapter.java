@@ -1,12 +1,13 @@
-package com.montgomeryenergyconnection;
+package com.montgomeryenergyconnection.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.montgomeryenergyconnection.R;
 import com.montgomeryenergyconnection.data.Task;
 import com.montgomeryenergyconnection.data.User;
 

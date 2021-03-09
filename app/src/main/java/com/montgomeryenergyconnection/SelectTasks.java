@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.montgomeryenergyconnection.adapters.SelectTaskAdapter;
 import com.montgomeryenergyconnection.data.BooleanTask;
 import com.montgomeryenergyconnection.data.IntTask;
 import com.montgomeryenergyconnection.data.Task;
@@ -35,7 +37,7 @@ public class SelectTasks extends AppCompatActivity {
 
     private User user;
 
-    private ArrayList<Task> allTasks;
+    private ArrayList<Task> allTasks = new ArrayList<>();
     private ArrayList<Task> electricityTasks = new ArrayList<>();
     private ArrayList<Task> waterTasks = new ArrayList<>();
     private ArrayList<Task> transportTasks = new ArrayList<>();
@@ -54,25 +56,38 @@ public class SelectTasks extends AppCompatActivity {
 
         next = findViewById(R.id.next);
 
-        electricity.setLayoutManager(new LinearLayoutManager(this));
-        water.setLayoutManager(new LinearLayoutManager(this));
-        transportation.setLayoutManager(new LinearLayoutManager(this));
-        home.setLayoutManager(new LinearLayoutManager(this));
+        electricity.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        water.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        transportation.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        home.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
 
         allTasks = getTasks();
 
+        FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), this);
         // updateUI(currentUser);
-
-        /***
-        // If the user has already selected their tasks
-        if(user.getInProgress().size() != 0 || user.getComplete().size() != 0){
-            startActivity(new Intent(SelectTasks.this, MainActivity.class));
-            finish();
-        }
-         ***/
 
     }
 
